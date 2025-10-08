@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export interface Reporte {
-  testigo: string;
   motivo: string;
   descripcion: string;
   fecha: string;
@@ -14,28 +13,25 @@ interface FormularioModalProps {
   trabajadores: string[]; // ✅ se recibe desde App.tsx
 }
 
-const motivos = ["Sucio", "Lento", "Actitud", "Fallo"];
+const motivos = ["Fallo", "Actitud", "Sucio", "Lento"];
 
 const FormularioModal: React.FC<FormularioModalProps> = ({
   show,
   onClose,
   onSubmit,
-  trabajadores,
 }) => {
-  const [testigo, setTestigo] = useState("");
   const [motivo, setMotivo] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
   const handleSubmit = () => {
-    if (!testigo || !motivo || !descripcion) {
+    if (!motivo || !descripcion) {
       alert("Por favor completa los campos obligatorios.");
       return;
     }
 
     const fecha = new Date().toISOString();
-    onSubmit({ testigo, motivo, descripcion, fecha });
+    onSubmit({ motivo, descripcion, fecha });
 
-    setTestigo("");
     setMotivo("");
     setDescripcion("");
     onClose();
@@ -47,23 +43,6 @@ const FormularioModal: React.FC<FormularioModalProps> = ({
     <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center z-3">
       <div className="bg-white rounded p-4" style={{ width: "400px" }}>
         <h5 className="mb-3">Formulario de Reporte</h5>
-
-        {/* Testigo con lista desplegable */}
-        <div className="mb-3">
-          <label className="form-label">Nombre del testigo</label>
-          <select
-            className="form-select"
-            value={testigo}
-            onChange={(e) => setTestigo(e.target.value)}
-          >
-            <option value="">Seleccione</option>
-            {trabajadores.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
 
         {/* Motivos como botones */}
         <div className="mb-3">

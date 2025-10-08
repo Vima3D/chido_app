@@ -43,9 +43,6 @@ const ReportesModal: React.FC<ReportesModalProps> = ({
             {reportes.map((r, i) => (
               <div key={i} className="border rounded p-2 mb-2">
                 <p>
-                  <strong>Nombre Testigo:</strong> {r.testigo}
-                </p>
-                <p>
                   <strong>Motivo:</strong> {r.motivo}
                 </p>
 

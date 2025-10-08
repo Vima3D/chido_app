@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import FormularioModal from "./FormularioModal";
 import ReportesModal from "./ReportesModal";
 import type { Reporte } from "./FormularioModal";
@@ -9,8 +11,6 @@ interface CuadroTrabajadorProps {
   trabajadores: string[];
 }
 
-const STORAGE_PREFIX = "reportes_";
-
 const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
   nombre,
   trabajadores,
@@ -19,26 +19,28 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
   const [mostrarModalReportes, setMostrarModalReportes] = useState(false);
   const [reportes, setReportes] = useState<Reporte[]>([]);
 
-  // Cargar reportes desde localStorage
+  // 🔹 Cargar reportes desde Firestore
   useEffect(() => {
-    const datos = localStorage.getItem(STORAGE_PREFIX + nombre);
-    if (datos) {
-      try {
-        setReportes(JSON.parse(datos));
-      } catch {
-        setReportes([]);
-      }
-    }
+    const cargarReportes = async () => {
+      const q = query(
+        collection(db, "reportes"),
+        where("nombre", "==", nombre)
+      );
+      const querySnapshot = await getDocs(q);
+      const lista: Reporte[] = [];
+      querySnapshot.forEach((doc) => lista.push(doc.data() as Reporte));
+      setReportes(lista);
+    };
+
+    cargarReportes();
   }, [nombre]);
 
-  // Guardar reportes en localStorage
-  useEffect(() => {
-    localStorage.setItem(STORAGE_PREFIX + nombre, JSON.stringify(reportes));
-  }, [nombre, reportes]);
-
-  const manejarNuevoReporte = (reporte: Reporte) => {
+  // 🔹 Guardar nuevo reporte en Firestore
+  const manejarNuevoReporte = async (reporte: Reporte) => {
     if (reportes.length >= 5) return;
-    setReportes((prev) => [...prev, reporte]);
+    const nuevo = { ...reporte, nombre };
+    await addDoc(collection(db, "reportes"), nuevo);
+    setReportes((prev) => [...prev, nuevo]);
     setMostrarFormulario(false);
   };
 
@@ -77,7 +79,7 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
         </div>
 
         <div className="d-flex flex-wrap gap-2 justify-content-end">
-          {[...Array(5)].map((_, index) => (
+          {[...Array(10)].map((_, index) => (
             <div
               key={index}
               className="border rounded"
@@ -94,7 +96,6 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
         </div>
       </div>
 
-      {/* Modal para crear nuevo reporte */}
       <FormularioModal
         show={mostrarFormulario}
         onClose={() => setMostrarFormulario(false)}
@@ -102,7 +103,6 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
         trabajadores={trabajadores}
       />
 
-      {/* Modal para ver reportes */}
       <ReportesModal
         show={mostrarModalReportes}
         onClose={() => setMostrarModalReportes(false)}
