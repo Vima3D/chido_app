@@ -18,18 +18,26 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalReportes, setMostrarModalReportes] = useState(false);
   const [reportes, setReportes] = useState<Reporte[]>([]);
+  const [cargando, setCargando] = useState(true);
 
   // 🔹 Cargar reportes desde Firestore
   useEffect(() => {
     const cargarReportes = async () => {
-      const q = query(
-        collection(db, "reportes"),
-        where("nombre", "==", nombre)
-      );
-      const querySnapshot = await getDocs(q);
-      const lista: Reporte[] = [];
-      querySnapshot.forEach((doc) => lista.push(doc.data() as Reporte));
-      setReportes(lista);
+      setCargando(true);
+      try {
+        const q = query(
+          collection(db, "reportes"),
+          where("nombre", "==", nombre)
+        );
+        const querySnapshot = await getDocs(q);
+        const lista: Reporte[] = [];
+        querySnapshot.forEach((doc) => lista.push(doc.data() as Reporte));
+        setReportes(lista);
+      } catch (error) {
+        console.error("Error al cargar reportes:", error);
+      } finally {
+        setCargando(false);
+      }
     };
 
     cargarReportes();
@@ -39,9 +47,15 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
   const manejarNuevoReporte = async (reporte: Reporte) => {
     if (reportes.length >= 5) return;
     const nuevo = { ...reporte, nombre };
-    await addDoc(collection(db, "reportes"), nuevo);
-    setReportes((prev) => [...prev, nuevo]);
-    setMostrarFormulario(false);
+
+    try {
+      await addDoc(collection(db, "reportes"), nuevo);
+      setReportes((prev) => [...prev, nuevo]);
+      setMostrarFormulario(false);
+    } catch (error) {
+      console.error("Error al guardar reporte:", error);
+      alert("No se pudo guardar el reporte. Revisa la consola.");
+    }
   };
 
   const completado = reportes.length === 5;
@@ -79,20 +93,24 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
         </div>
 
         <div className="d-flex flex-wrap gap-2 justify-content-end">
-          {[...Array(10)].map((_, index) => (
-            <div
-              key={index}
-              className="border rounded"
-              style={{
-                width: "60px",
-                height: "60px",
-                backgroundColor: index < reportes.length ? "orange" : "white",
-              }}
-              title={
-                index < reportes.length ? "Reporte enviado" : "Enviar reporte"
-              }
-            />
-          ))}
+          {cargando ? (
+            <span>Cargando...</span>
+          ) : (
+            [...Array(10)].map((_, index) => (
+              <div
+                key={index}
+                className="border rounded"
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  backgroundColor: index < reportes.length ? "orange" : "white",
+                }}
+                title={
+                  index < reportes.length ? "Reporte enviado" : "Enviar reporte"
+                }
+              />
+            ))
+          )}
         </div>
       </div>
 
