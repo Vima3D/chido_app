@@ -45,7 +45,7 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
 
   // 🔹 Guardar nuevo reporte en Firestore
   const manejarNuevoReporte = async (reporte: Reporte) => {
-    if (reportes.length >= 5) return;
+    if (reportes.length >= 10) return; // ahora hasta 10
     const nuevo = { ...reporte, nombre };
 
     try {
@@ -58,24 +58,36 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
     }
   };
 
-  const completado = reportes.length === 5;
+  // 🔹 Determinar color de fondo según cantidad
+  const cantidad = reportes.length;
+  let fondo = "#f8f9fa"; // gris claro (bg-light)
+
+  if (cantidad >= 10) {
+    fondo = "#dc3545"; // rojo (Bootstrap danger)
+  } else if (cantidad >= 5) {
+    fondo = "#b85e00"; // naranja oscuro personalizado
+  }
+
+  const bloqueado = cantidad >= 10;
 
   return (
     <>
       <div
-        className={`cuadro-trabajador border rounded p-4 w-100 mb-3 d-flex align-items-center justify-content-between
-          ${completado ? "bg-danger" : "bg-light hover-dark"}`}
+        className="cuadro-trabajador border rounded p-3 w-100 mb-3 d-flex align-items-center"
         style={{
           maxWidth: "700px",
           margin: "0 auto",
-          cursor: completado ? "not-allowed" : "pointer",
+          cursor: bloqueado ? "not-allowed" : "pointer",
+          backgroundColor: fondo,
+          color: "black", // 🔸 el texto siempre en negro
+          transition: "background-color 0.3s ease",
         }}
         onClick={() => {
-          if (!completado) setMostrarFormulario(true);
+          if (!bloqueado) setMostrarFormulario(true);
         }}
       >
         <div
-          className="border rounded p-3 me-2 bg-white"
+          className="border rounded py-3 bg-white"
           style={{
             cursor: "pointer",
             minWidth: "80px",
@@ -103,11 +115,9 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
                 style={{
                   width: "60px",
                   height: "60px",
-                  backgroundColor: index < reportes.length ? "orange" : "white",
+                  backgroundColor: index < cantidad ? "orange" : "white",
                 }}
-                title={
-                  index < reportes.length ? "Reporte enviado" : "Enviar reporte"
-                }
+                title={index < cantidad ? "Reporte enviado" : "Enviar reporte"}
               />
             ))
           )}

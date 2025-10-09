@@ -7,7 +7,17 @@ import type { Reporte } from "./Components/FormularioModal";
 import { useState } from "react";
 
 const App: React.FC = () => {
-  const trabajadores = ["Ana", "Luis", "Carlos", "María", "Pedro", "Lucas"];
+  const trabajadores = [
+    "Jose",
+    "Blanca",
+    "Ehedei",
+    "Pietro",
+    "Ana",
+    "Flor",
+    "Cristian",
+    "Carlota",
+    "Victor",
+  ];
   const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = (reporte: Reporte) => {
