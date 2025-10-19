@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change if your default branch is different
+      - main
   workflow_dispatch:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build
@@ -40,7 +40,7 @@ jobs:
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # Change this if your build folder is different
+          path: ./dist
 
   deploy:
     runs-on: ubuntu-latest
