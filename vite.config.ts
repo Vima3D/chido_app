@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react"; // ← IMPORTAR EL PLUGIN
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/chido_app/", // importante para GitHub Pages
-  plugins: [react()], // ahora TypeScript lo reconoce
+  base: "./", // important for GitHub Pages
+  plugins: [react()],
 });
