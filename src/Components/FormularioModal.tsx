@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ReportGate from "../components/ReportGate";
 export interface Reporte {
   motivo: string;
   descripcion: string;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FormularioModal, { Reporte } from "../components/FormularioModal";
-import ReportGate from "../components/ReportGate";
+import FormularioModal from "../Components/FormularioModal";
+import ReportGate from "../Components/ReportGate";
 
 export default function WorkersPage() {
   const [showPasswordGate, setShowPasswordGate] = useState(false);

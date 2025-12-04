@@ -1,11 +1,13 @@
 import { useState } from "react";
 import NumericKeyboard from "./NumericKeyboard";
+import type { ReactNode } from "react";
 
 interface Props {
   onValidate: (password: string) => boolean;
   onClose: () => void;
   onSuccess: () => void;
   length?: number;
+  children?: ReactNode; // <-- Recibimos children opcional
 }
 
 export default function PasswordGate({
@@ -13,6 +15,7 @@ export default function PasswordGate({
   onClose,
   onSuccess,
   length = 4,
+  children, // <-- Desestructuramos children
 }: Props) {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -52,13 +55,9 @@ export default function PasswordGate({
     >
       <div style={styles.box} onClick={onBoxClick}>
         <h2>Introduce la contraseña</h2>
-
         <div style={styles.display}>{input.replace(/./g, "•") || ""}</div>
-
         {error && <p style={{ color: "red" }}>{error}</p>}
-
         <NumericKeyboard onPress={handlePress} onDelete={handleDelete} />
-
         <button
           style={styles.button}
           onClick={handleSubmit}
@@ -66,6 +65,7 @@ export default function PasswordGate({
         >
           Aceptar
         </button>
+        {children} {/* <-- Aquí mostramos el contenido pasado */}
       </div>
     </div>
   );

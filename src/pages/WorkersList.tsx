@@ -1,11 +1,27 @@
 import { useState } from "react";
-import ReportGate from "../components/ReportGate";
+import ReportGate from "../Components/ReportGate";
+import FormularioModal from "../Components/FormularioModal";
+import type { Reporte } from "../Components/FormularioModal";
 
 export default function WorkersList() {
-  const [showModal, setShowModal] = useState(false);
+  const [showPasswordGate, setShowPasswordGate] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
+  // Abrir modal para pedir contraseña
   const handleWorkerClick = () => {
-    setShowModal(true);
+    setShowPasswordGate(true);
+  };
+
+  // Cuando contraseña es correcta, abrir formulario y cerrar gate
+  const handlePasswordSuccess = () => {
+    setShowPasswordGate(false);
+    setShowForm(true);
+  };
+
+  // Guardar datos del formulario (ejemplo)
+  const handleSubmit = (reporte: Reporte) => {
+    console.log("Reporte enviado:", reporte);
+    setShowForm(false);
   };
 
   return (
@@ -23,14 +39,20 @@ export default function WorkersList() {
         Trabajador 1 (clic aquí)
       </div>
 
-      <ReportGate showModal={showModal} onClose={() => setShowModal(false)}>
-        <h2>Agregar reporte</h2>
-        <textarea
-          placeholder="Describe el incidente o fallo"
-          style={{ width: "100%", height: 120, padding: 8 }}
-        />
-        <button style={{ marginTop: 10 }}>Guardar reporte</button>
-      </ReportGate>
+      {/* Modal para pedir contraseña */}
+      <ReportGate
+        showModal={showPasswordGate}
+        onClose={() => setShowPasswordGate(false)}
+        onSuccess={handlePasswordSuccess}
+      />
+
+      {/* Modal formulario para agregar reporte */}
+      <FormularioModal
+        show={showForm}
+        onClose={() => setShowForm(false)}
+        onSubmit={handleSubmit}
+        trabajadores={["Trabajador 1", "Trabajador 2"]} // ejemplo
+      />
     </>
   );
 }
