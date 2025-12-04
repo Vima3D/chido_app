@@ -2,6 +2,12 @@ import { useState } from "react";
 import FormularioModal from "../Components/FormularioModal";
 import ReportGate from "../Components/ReportGate";
 
+export interface Reporte {
+  motivo: string;
+  descripcion: string;
+  fecha: string;
+}
+
 export default function WorkersPage() {
   const [showPasswordGate, setShowPasswordGate] = useState(false);
   const [showForm, setShowForm] = useState(false);
