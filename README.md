@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# Chido App – Sistema de Reportes Internos del Restaurante Chido
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Chido App es una aplicación web creada para gestionar **reportes internos** sobre los trabajadores del restaurante **Chido**.
+El objetivo es mantener un registro estructurado de **observaciones, incidentes y fallos**, con el fin de mejorar el rendimiento y garantizar el cumplimiento de las normas del restaurante.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚠️ Importante
 
-## React Compiler
+Al inicio de la aplicación se explica que:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Los reportes **no** se usan para felicitaciones.
+- Solo se registran **observaciones**, **incidentes** o **fallos**.
+- La **acumulación de fallos** puede generar consecuencias internas según las normas del restaurante (amonestaciones, seguimiento, reuniones, etc.).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Funcionalidades principales
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 👥 Lista de trabajadores
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+La pantalla principal muestra un conjunto de tarjetas, cada una correspondiente a un trabajador.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### ➕ Registrar un reporte
+
+- Al **hacer clic sobre el cuadro del trabajador**, puedes **añadir un nuevo reporte negativo**.
+- Cada reporte describe un incidente, un fallo o una observación relevante.
+
+### 📄 Ver historial de reportes
+
+- Al **hacer clic sobre el nombre del trabajador**, se abre su vista de detalle.
+- Allí puedes consultar **todos los reportes acumulados** del empleado.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- **React** + **TypeScript**
+- **Vite**
+- **ESLint** (configurado para mantener orden y calidad en el código)
+
+---
+
+## 📦 Instalación
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/Vima3D/chido_app.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Entrar al proyecto:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd chido_app
 ```
+
+3. Instalar dependencias:
+
+```bash
+npm install
+```
+
+4. Ejecutar en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+---
+
+## 📁 Estructura sugerida del proyecto
+
+```
+src/
+  components/     # Componentes reutilizables (cards, inputs, modales, etc.)
+  pages/          # Pantallas principales (lista, reporte del trabajador)
+  data/           # Datos estáticos o de ejemplo
+  hooks/          # Lógica compartida
+  styles/         # Estilos globales y utilitarios
+```
+
+---
+
+## 🎯 Objetivo del sistema
+
+Chido App busca facilitar el seguimiento del desempeño de cada empleado, registrando de forma clara:
+
+- Incidentes ocurridos durante el turno
+- Fallos recurrentes
+- Observaciones relevantes del supervisor
+
+Este sistema permite mantener transparencia y uniformidad en la gestión del personal, asegurando que cada trabajador conozca las expectativas y consecuencias de acumular fallos.
+
+---
+
+## 🤝 Contribuciones
+
+Sugerencias y mejoras son bienvenidas.
+Puedes abrir **issues** o enviar **pull requests** en cualquier momento.
+
+---

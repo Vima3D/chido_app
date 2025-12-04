@@ -1,0 +1,32 @@
+.keyboard-container {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.keyboard-key {
+  background: #e8e8e8;
+  border: none;
+  padding: 20px 0;
+  font-size: 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.keyboard-key:active {
+  background: #cfcfcf;
+}
+
+.keyboard-delete {
+  grid-column: span 3;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 14px 0;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}

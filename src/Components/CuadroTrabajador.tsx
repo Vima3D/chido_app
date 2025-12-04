@@ -3,6 +3,7 @@ import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import FormularioModal from "./FormularioModal";
 import ReportesModal from "./ReportesModal";
+import ReportGate from "./ReportGate"; // Importamos el gate de contraseña
 import type { Reporte } from "./FormularioModal";
 import "./CuadroTrabajador.css";
 
@@ -20,7 +21,10 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
   const [reportes, setReportes] = useState<Reporte[]>([]);
   const [cargando, setCargando] = useState(true);
 
-  // 🔹 Cargar reportes desde Firestore
+  // Estado para mostrar modal contraseña
+  const [showPasswordGate, setShowPasswordGate] = useState(false);
+
+  // Cargar reportes de Firestore
   useEffect(() => {
     const cargarReportes = async () => {
       setCargando(true);
@@ -43,9 +47,9 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
     cargarReportes();
   }, [nombre]);
 
-  // 🔹 Guardar nuevo reporte en Firestore
+  // Guardar nuevo reporte en Firestore
   const manejarNuevoReporte = async (reporte: Reporte) => {
-    if (reportes.length >= 10) return; // ahora hasta 10
+    if (reportes.length >= 10) return; // límite 10 reportes
     const nuevo = { ...reporte, nombre };
 
     try {
@@ -58,17 +62,26 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
     }
   };
 
-  // 🔹 Determinar color de fondo según cantidad
+  // Colores de fondo según cantidad reportes
   const cantidad = reportes.length;
-  let fondo = "#f8f9fa"; // gris claro (bg-light)
-
+  let fondo = "#f8f9fa";
   if (cantidad >= 10) {
-    fondo = "#dc3545"; // rojo (Bootstrap danger)
+    fondo = "#dc3545";
   } else if (cantidad >= 5) {
-    fondo = "#b85e00"; // naranja oscuro personalizado
+    fondo = "#b85e00";
   }
-
   const bloqueado = cantidad >= 10;
+
+  // Al hacer clic en trabajador, primero abrir modal contraseña
+  const abrirGateContrasena = () => {
+    if (!bloqueado) setShowPasswordGate(true);
+  };
+
+  // Callback: si la contraseña es correcta
+  const onPasswordSuccess = () => {
+    setShowPasswordGate(false); // cerrar modal contraseña
+    setMostrarFormulario(true); // abrir formulario
+  };
 
   return (
     <>
@@ -79,12 +92,10 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
           margin: "0 auto",
           cursor: bloqueado ? "not-allowed" : "pointer",
           backgroundColor: fondo,
-          color: "black", // 🔸 el texto siempre en negro
+          color: "black",
           transition: "background-color 0.3s ease",
         }}
-        onClick={() => {
-          if (!bloqueado) setMostrarFormulario(true);
-        }}
+        onClick={abrirGateContrasena}
       >
         <div
           className="border rounded py-3 bg-white"
@@ -123,14 +134,21 @@ const CuadroTrabajador: React.FC<CuadroTrabajadorProps> = ({
           )}
         </div>
       </div>
+      {/* Modal contraseña */}
+      <ReportGate
+        showModal={showPasswordGate}
+        onClose={() => setShowPasswordGate(false)}
+        onSuccess={onPasswordSuccess}
+      />
 
+      {/* Modal formulario */}
       <FormularioModal
         show={mostrarFormulario}
         onClose={() => setMostrarFormulario(false)}
         onSubmit={manejarNuevoReporte}
         trabajadores={trabajadores}
       />
-
+      {/* Modal reportes */}
       <ReportesModal
         show={mostrarModalReportes}
         onClose={() => setMostrarModalReportes(false)}

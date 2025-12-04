@@ -32,7 +32,7 @@ const App: React.FC = () => {
 
           <main className="text-center">
             <p className="fs-5 fw-semibold text-white">
-              La acumulación de 10 faltas conlleva
+              La acumulación de 10 faltas en un mes conlleva
             </p>
 
             <RulesList />

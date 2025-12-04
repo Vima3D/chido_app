@@ -8,7 +8,6 @@ const RulesList: React.FC = () => {
     >
       <RuleItem number="1ra vez:" description="Dejar 50€ en el bote" />
       <RuleItem number="2da vez:" description="Amonestación" />
-      <RuleItem number="3ra vez:" description="Posible despido" />
     </ul>
   );
 };
