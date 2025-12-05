@@ -2,8 +2,8 @@ name: Deploy React + Vite to GitHub Pages
 
 on:
   push:
-    branches: ["main"]  # o la rama que uses para producción
-  workflow_dispatch:  # permite ejecutar manualmente si quieres
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,8 +12,12 @@ permissions:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-pages.outputs.page_url }}
+
     concurrency:
-      group: 'pages'
+      group: "pages"
       cancel-in-progress: true
 
     runs-on: ubuntu-latest
@@ -23,10 +27,10 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/*   # por ejemplo 18.x
-          cache: 'npm'
+          node-version: 18
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -38,10 +42,10 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload build output
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: ./dist
 
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: deploy-pages
         uses: actions/deploy-pages@v4
